@@ -1,0 +1,214 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Preference android:title="Send notification now"
+        android:key="sendNotificationButton"
+        />
+
+    <EditTextPreference
+        android:capitalize="sentences"
+        android:defaultValue="Title"
+        android:inputType="text"
+        android:key="content_title"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="Title" />
+
+    <EditTextPreference
+        android:capitalize="sentences"
+        android:defaultValue="Body"
+        android:inputType="text"
+        android:key="content_text"
+        android:maxLines="3"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="Text" />
+
+    <EditTextPreference
+        android:capitalize="sentences"
+        android:defaultValue="Info"
+        android:inputType="text"
+        android:key="content_info"
+        android:maxLines="3"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="Info" />
+
+    <ListPreference
+    android:defaultValue="SOCIAL"
+    android:entries="@array/pref_categories_titles"
+    android:entryValues="@array/pref_categories"
+    android:key="category"
+    android:negativeButtonText="@null"
+    android:positiveButtonText="@null"
+    android:title="Set category" />
+
+
+    <EditTextPreference
+        android:capitalize="words"
+        android:defaultValue=""
+        android:inputType="textCapWords"
+        android:key="group"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:contentDescription="Leave empty to not bundle"
+        android:title="Group id" />
+
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:title="Update current notification"
+        android:key="update_notification"
+        />
+
+
+    <ListPreference
+        android:defaultValue="none"
+        android:entries="@array/pref_style_titles"
+        android:entryValues="@array/pref_style_values"
+        android:key="use_style"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="Attach photo, text, cover card or media controller" />
+
+
+    <ListPreference
+        android:defaultValue="none"
+        android:entries="@array/pref_large_icon_content_titles"
+        android:entryValues="@array/pref_large_icon_content_values"
+        android:key="large_icon"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="Set large icon (avatar)" />
+
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:title="Use group summary"
+        android:key="group_summary"
+        />
+
+    <MultiSelectListPreference
+        android:entries="@array/pref_action_titles"
+        android:entryValues="@array/pref_action_values"
+        android:title="Actions"
+        android:negativeButtonText="Cancel"
+        android:positiveButtonText="OK"
+        android:key="actions"
+        />
+
+    <ListPreference
+        android:defaultValue="0"
+        android:entries="@array/pref_priority_titles"
+        android:entryValues="@array/pref_priority_values"
+        android:key="priority"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="Set priority" />
+
+
+    <ListPreference
+        android:defaultValue="0"
+        android:entries="@array/pref_visibility_titles"
+        android:entryValues="@array/pref_visibility_values"
+        android:key="visibility"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="Set visibility" />
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:title="Only alert once"
+        android:key="only_alert_once"
+        />
+
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:title="Ongoing"
+        android:key="ongoing"
+        />
+
+    <!-- .setWhen() -->
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:title="Chronometer"
+        android:key="uses_chronometer"
+        />
+
+
+    <SwitchPreference
+        android:defaultValue="true"
+        android:title="Vibrate"
+        android:key="vibrate"
+        />
+
+    <EditTextPreference
+    android:capitalize="words"
+    android:defaultValue="Morten Just"
+    android:inputType="textCapWords"
+    android:key="person"
+    android:maxLines="1"
+    android:selectAllOnFocus="true"
+    android:singleLine="true"
+    android:title="Person" />
+
+    <SwitchPreference
+        android:defaultValue="true"
+        android:title="Add action item"
+        android:key="action"
+        />
+
+    <SwitchPreference
+        android:defaultValue="true"
+        android:title="Dismiss when tapped"
+        android:key="auto_cancel"
+        />
+
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:title="Set color to red"
+        android:key="color"
+        />
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:title="Local Only"
+        android:key="local_only"
+        />
+
+
+    <PreferenceCategory
+        android:title="Wearable extender"
+        />
+
+
+
+    <!--&lt;!&ndash; A 'parent' preference, which enables/disables child preferences (below)-->
+         <!--when checked/unchecked. &ndash;&gt;-->
+    <!--<SwitchPreference-->
+        <!--android:defaultValue="true"-->
+        <!--android:key="notifications_new_message"-->
+        <!--android:title="@string/pref_title_new_message_notifications" />-->
+
+    <!--&lt;!&ndash; Allows the user to choose a ringtone in the 'notification' category. &ndash;&gt;-->
+    <!--&lt;!&ndash; NOTE: This preference will be enabled only when the checkbox above is checked. &ndash;&gt;-->
+    <!--&lt;!&ndash; NOTE: RingtonePreference's summary should be set to its value by the activity code. &ndash;&gt;-->
+    <!--<RingtonePreference-->
+        <!--android:defaultValue="content://settings/system/notification_sound"-->
+        <!--android:dependency="notifications_new_message"-->
+        <!--android:key="notifications_new_message_ringtone"-->
+        <!--android:ringtoneType="notification"-->
+        <!--android:title="@string/pref_title_ringtone" />-->
+
+    <!--&lt;!&ndash; NOTE: This preference will be enabled only when the checkbox above is checked. &ndash;&gt;-->
+    <!--<SwitchPreference-->
+        <!--android:defaultValue="true"-->
+        <!--android:dependency="notifications_new_message"-->
+        <!--android:key="notifications_new_message_vibrate"-->
+        <!--android:title="@string/pref_title_vibrate" />-->
+
+</PreferenceScreen>

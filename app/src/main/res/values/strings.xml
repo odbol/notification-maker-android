@@ -1,0 +1,175 @@
+<resources>
+    <string name="app_name">Notification Maker</string>
+
+    <!-- Strings related to Notification builder -->
+
+    <string name="content_title">Content Title</string>
+
+
+
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_title_social_recommendations">Enable social recommendations</string>
+    <string name="pref_description_social_recommendations">Recommendations for people to contact
+        based on your message history
+    </string>
+
+    <string name="pref_title_display_name">Display name</string>
+    <string name="pref_default_display_name">John Smith</string>
+    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
+
+    <string-array name="pref_large_icon_content_titles">
+        <item>None</item>
+        <item>Girl with watches as eyes</item>
+        <item>Guy with hand signs</item>
+        <item>Asian man</item>
+        <item>Man with hat</item>
+        <item>Man with watch</item>
+        <item>Woman with hat</item>
+        <item>This app\'s icon</item>
+    </string-array>
+    <string-array name="pref_large_icon_content_values">
+        <item>none</item>
+        <item>photo_female_watches_as_eyes</item>
+        <item>profile_male_finger_pattern</item>
+        <item>profile_man_asian</item>
+        <item>profile_man_hat</item>
+        <item>profile_man_watch</item>
+        <item>profile_woman_hat</item>
+        <item>launcher_icon</item>
+    </string-array>
+
+    <string-array name="pref_priority_titles">
+        <item>PRIORITY_MIN</item>
+        <item>PRIORITY_LOW</item>
+        <item>PRIORITY_DEFAULT</item>
+        <item>PRIORITY_HIGH</item>
+        <item>PRIORITY_MAX</item>
+    </string-array>
+
+<string-array name="pref_priority_values">
+        <item>-2</item>
+        <item>-1</item>
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+
+    <string-array name="pref_action_titles">
+        <item>Reply</item>
+        <item>Archive</item>
+        <item>Comment</item>
+        <item>Like</item>
+        <item>Open</item>
+        <item>Done</item>
+    </string-array>
+    <string-array name="pref_action_values">
+        <item>reply</item>
+        <item>archive</item>
+        <item>comment</item>
+        <item>like</item>
+        <item>open</item>
+        <item>done</item>
+    </string-array>
+
+
+    <string-array name="pref_visibility_titles">
+        <item>VISIBILITY_PRIVATE</item>
+        <item>VISIBILITY_PUBLIC</item>
+        <item>VISIBILITY_SECRET</item>
+    </string-array>
+    <string-array name="pref_visibility_values">
+        <item>0</item>
+        <item>1</item>
+        <item>-1</item>
+    </string-array>
+
+
+    <string-array name="pref_style_titles">
+        <item>None</item>
+        <item>Attach photo (BigPictureStyle)</item>
+        <item>Long text (BigTextStyle)</item>
+        <item>Cover card (InboxStyle)</item>
+        <item>Media card (MediaStyle)</item>
+    </string-array>
+    <string-array name="pref_style_values">
+        <item>none</item>
+        <item>use_big_picture_style</item>
+        <item>use_big_text_style</item>
+        <item>use_inbox_style</item>
+        <item>use_media_style</item>
+    </string-array>
+
+
+    <string-array name="pref_categories_titles">
+        <item>ALARM</item>
+        <item>CALL</item>
+        <item>EMAIL</item>
+        <item>ERROR</item>
+        <item>EVENT</item>
+        <item>MESSAGE</item>
+        <item>PROGRESS</item>
+        <item>PROMO</item>
+        <item>RECOMMENDATION</item>
+        <item>REMINDER</item>
+        <item>SERVICE</item>
+        <item>SOCIAL</item>
+        <item>STATUS</item>
+        <item>SYSTEM</item>
+        <item>TRANSPORT</item>
+    </string-array>
+
+    <string-array name="pref_categories">
+        <item>alarm</item>
+        <item>call</item>
+        <item>email</item>
+        <item>error</item>
+        <item>event</item>
+        <item>message</item>
+        <item>progress</item>
+        <item>promo</item>
+        <item>recommendation</item>
+        <item>reminder</item>
+        <item>service</item>
+        <item>social</item>
+        <item>status</item>
+        <item>system</item>
+        <item>transport</item>
+    </string-array>
+
+    <!-- Example settings for Data & Sync -->
+    <string name="pref_header_data_sync">Data &amp; sync</string>
+
+    <string name="pref_title_sync_frequency">Sync frequency</string>
+    <string-array name="pref_sync_frequency_titles">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>-1</item>
+    </string-array>
+
+    <string name="pref_title_system_sync_settings">System sync settings</string>
+
+    <!-- Example settings for Notifications -->
+    <string name="pref_header_notifications">Notifications</string>
+
+    <string name="pref_title_new_message_notifications">New message notifications</string>
+
+    <string name="pref_title_ringtone">Ringtone</string>
+    <string name="pref_ringtone_silent">Silent</string>
+
+    <string name="pref_title_vibrate">Vibrate</string>
+</resources>

@@ -1,0 +1,29 @@
+<preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- These settings headers are only used on tablets. -->
+
+    <header
+        android:fragment="com.mortenjust.notificationmaker.SettingsActivity$NotificationPreferenceFragment"
+        android:icon="@drawable/ic_notifications_black_24dp"
+        android:title="Custom notification" />
+
+
+    <!--<header-->
+        <!--android:fragment="com.mortenjust.notificationmaker.SettingsActivity$AppearancePreferenceFragment"-->
+        <!--android:icon="@drawable/ic_info_black_24dp"-->
+        <!--android:title="Appearance" />-->
+
+
+    <!--<header-->
+        <!--android:fragment="com.mortenjust.notificationmaker.SettingsActivity$DataSyncPreferenceFragment"-->
+        <!--android:icon="@drawable/ic_sync_black_24dp"-->
+        <!--android:title="@string/pref_header_data_sync" />-->
+
+    <!--<header android:id="@+id/send_notification"-->
+        <!--android:title="Post notification now"-->
+        <!--android:key="post_notification"-->
+        <!--android:summary="">-->
+    <!--</header>-->
+
+
+</preference-headers>
