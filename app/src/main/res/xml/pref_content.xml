@@ -10,6 +10,7 @@
         android:inputType="text"
         android:key="content_title"
         android:maxLines="1"
+        android:icon="@drawable/ic_title_black_24dp"
         android:selectAllOnFocus="true"
         android:singleLine="true"
         android:title="Title" />
@@ -17,6 +18,7 @@
     <EditTextPreference
         android:capitalize="sentences"
         android:defaultValue="Body"
+        android:icon="@drawable/ic_title_black_24dp"
         android:inputType="text"
         android:key="content_text"
         android:maxLines="3"
@@ -24,9 +26,21 @@
         android:singleLine="true"
         android:title="Text" />
 
+    <MultiSelectListPreference
+        android:entries="@array/pref_action_titles"
+        android:entryValues="@array/pref_action_values"
+        android:title="Actions"
+        android:icon="@drawable/ic_check_circle_black_24dp"
+        android:negativeButtonText="Cancel"
+        android:positiveButtonText="OK"
+        android:key="actions"
+        />
+
+
     <EditTextPreference
         android:capitalize="sentences"
         android:defaultValue="Info"
+        android:icon="@drawable/ic_info_black_24dp"
         android:inputType="text"
         android:key="content_info"
         android:maxLines="3"
@@ -35,13 +49,25 @@
         android:title="Info" />
 
     <ListPreference
-    android:defaultValue="SOCIAL"
-    android:entries="@array/pref_categories_titles"
-    android:entryValues="@array/pref_categories"
-    android:key="category"
-    android:negativeButtonText="@null"
-    android:positiveButtonText="@null"
-    android:title="Set category" />
+        android:defaultValue="none"
+        android:entries="@array/pref_large_icon_content_titles"
+        android:entryValues="@array/pref_large_icon_content_values"
+        android:key="large_icon"
+        android:icon="@drawable/ic_account_circle_black_24dp"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="Set large icon (avatar)" />
+
+
+    <ListPreference
+        android:defaultValue="none"
+        android:entries="@array/pref_style_titles"
+        android:entryValues="@array/pref_style_values"
+        android:icon="@drawable/ic_gesture_black_24dp"
+        android:key="use_style"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="Style: Photo, text, cover or media" />
 
 
     <EditTextPreference
@@ -49,38 +75,47 @@
         android:defaultValue=""
         android:inputType="textCapWords"
         android:key="group"
+        android:icon="@drawable/ic_group_work_black_24dp"
         android:maxLines="1"
         android:selectAllOnFocus="true"
         android:singleLine="true"
-        android:contentDescription="Leave empty to not bundle"
-        android:title="Group id" />
+        android:title="Group id for bundling" />
+
+
+    <ListPreference
+        android:defaultValue="0"
+        android:entries="@array/pref_priority_titles"
+        android:entryValues="@array/pref_priority_values"
+        android:key="priority"
+        android:icon="@drawable/ic_priority_high_black_24dp"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="Set priority" />
 
 
     <SwitchPreference
-        android:defaultValue="false"
-        android:title="Update current notification"
-        android:key="update_notification"
+        android:defaultValue="true"
+        android:title="Vibrate"
+        android:key="vibrate"
         />
 
 
     <ListPreference
-        android:defaultValue="none"
-        android:entries="@array/pref_style_titles"
-        android:entryValues="@array/pref_style_values"
-        android:key="use_style"
+        android:defaultValue="SOCIAL"
+        android:entries="@array/pref_categories_titles"
+        android:entryValues="@array/pref_categories"
+        android:key="category"
+        android:icon="@drawable/ic_folder_black_24dp"
         android:negativeButtonText="@null"
         android:positiveButtonText="@null"
-        android:title="Attach photo, text, cover card or media controller" />
+        android:title="Set category" />
 
+    <SwitchPreference
+        android:defaultValue="false"
+        android:title="Update current notification, don't make additional ones"
+        android:key="update_notification"
+        />
 
-    <ListPreference
-        android:defaultValue="none"
-        android:entries="@array/pref_large_icon_content_titles"
-        android:entryValues="@array/pref_large_icon_content_values"
-        android:key="large_icon"
-        android:negativeButtonText="@null"
-        android:positiveButtonText="@null"
-        android:title="Set large icon (avatar)" />
 
 
     <SwitchPreference
@@ -89,33 +124,36 @@
         android:key="group_summary"
         />
 
-    <MultiSelectListPreference
-        android:entries="@array/pref_action_titles"
-        android:entryValues="@array/pref_action_values"
-        android:title="Actions"
-        android:negativeButtonText="Cancel"
-        android:positiveButtonText="OK"
-        android:key="actions"
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:title="Use inline reply (RemoteInput)"
+        android:key="use_remote_input"
         />
 
-    <ListPreference
-        android:defaultValue="0"
-        android:entries="@array/pref_priority_titles"
-        android:entryValues="@array/pref_priority_values"
-        android:key="priority"
-        android:negativeButtonText="@null"
-        android:positiveButtonText="@null"
-        android:title="Set priority" />
-
 
     <ListPreference
         android:defaultValue="0"
+        android:icon="@drawable/ic_visibility_black_24dp"
         android:entries="@array/pref_visibility_titles"
         android:entryValues="@array/pref_visibility_values"
         android:key="visibility"
         android:negativeButtonText="@null"
         android:positiveButtonText="@null"
         android:title="Set visibility" />
+
+
+
+    <EditTextPreference
+        android:capitalize="words"
+        android:defaultValue="Morten Just"
+        android:inputType="textCapWords"
+        android:icon="@drawable/ic_accessibility_black_24dp"
+        android:key="person"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="Person" />
 
     <SwitchPreference
         android:defaultValue="false"
@@ -139,51 +177,81 @@
         />
 
 
-    <SwitchPreference
-        android:defaultValue="true"
-        android:title="Vibrate"
-        android:key="vibrate"
-        />
-
-    <EditTextPreference
-    android:capitalize="words"
-    android:defaultValue="Morten Just"
-    android:inputType="textCapWords"
-    android:key="person"
-    android:maxLines="1"
-    android:selectAllOnFocus="true"
-    android:singleLine="true"
-    android:title="Person" />
-
-    <SwitchPreference
-        android:defaultValue="true"
-        android:title="Add action item"
-        android:key="action"
-        />
-
-    <SwitchPreference
-        android:defaultValue="true"
-        android:title="Dismiss when tapped"
-        android:key="auto_cancel"
-        />
 
 
-    <SwitchPreference
-        android:defaultValue="false"
-        android:title="Set color to red"
-        android:key="color"
-        />
+    <!--<SwitchPreference-->
+        <!--android:defaultValue="true"-->
+        <!--android:title="Add action item"-->
+        <!--android:key="action"-->
+        <!--/>-->
 
-    <SwitchPreference
-        android:defaultValue="false"
-        android:title="Local Only"
-        android:key="local_only"
-        />
+    <!--<SwitchPreference-->
+        <!--android:defaultValue="true"-->
+        <!--android:title="Dismiss when tapped"-->
+        <!--android:key="auto_cancel"-->
+        <!--/>-->
+
+
+    <!--<SwitchPreference-->
+        <!--android:defaultValue="false"-->
+        <!--android:title="Set color to red"-->
+        <!--android:key="color"-->
+        <!--/>-->
+
+    <!--<SwitchPreference-->
+        <!--android:defaultValue="false"-->
+        <!--android:title="Local Only"-->
+        <!--android:key="local_only"-->
+        <!--/>-->
 
 
     <PreferenceCategory
         android:title="Wearable extender"
         />
+
+    <SwitchPreference
+        android:title="Enable"
+        android:defaultValue="false"
+        android:key="enable_wearable_extender"
+        />
+
+    <MultiSelectListPreference
+        android:entries="@array/pref_wearable_action_titles"
+        android:entryValues="@array/pref_wearable_action_values"
+        android:title="Actions"
+        android:icon="@drawable/ic_check_circle_black_24dp"
+        android:negativeButtonText="Cancel"
+        android:positiveButtonText="OK"
+        android:key="wearable_actions"
+        />
+
+
+    <SwitchPreference
+        android:title="Long screen timeout"
+        android:defaultValue="false"
+        android:key="long_screen_timeout"
+        />
+
+    <SwitchPreference
+        android:title="Start scrolled to bottom"
+        android:defaultValue="false"
+        android:key="start_scrolled_to_bottom"
+        />
+
+
+    <SwitchPreference
+        android:title="Use a background image"
+        android:defaultValue="false"
+        android:key="background_image"
+        />
+
+
+    <SwitchPreference
+        android:title="Add notification pages"
+        android:defaultValue="false"
+        android:key="add_wearable_pages"
+        />
+
 
 
 
@@ -210,5 +278,11 @@
         <!--android:dependency="notifications_new_message"-->
         <!--android:key="notifications_new_message_vibrate"-->
         <!--android:title="@string/pref_title_vibrate" />-->
+
+    <Preference
+        android:title="Dismiss all"
+        android:key="dismiss_all"
+        />
+
 
 </PreferenceScreen>

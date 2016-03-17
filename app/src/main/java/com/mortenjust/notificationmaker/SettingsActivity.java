@@ -2,6 +2,7 @@ package com.mortenjust.notificationmaker;
 
 
 import android.annotation.TargetApi;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -134,6 +135,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                         .getString(preference.getKey(), ""));
     }
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -147,6 +150,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             // Show the Up button in the action bar.
+            actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
@@ -235,12 +239,12 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             bindPreferenceSummaryToValue(findPreference("use_style"));
             bindPreferenceSummaryToValue(findPreference("large_icon"));
             bindPreferenceSummaryToValue(findPreference("priority"));
+//            bindHashSetPreferenceSummaryToValue(findPreference("actions")); // meh, crashes
             bindPreferenceSummaryToValue(findPreference("visibility"));
             bindPreferenceSummaryToValue(findPreference("person"));
 
-            Preference buttonPref = findPreference("sendNotificationButton");
-//            buttonPref.setTitle("CHANGED FROM CODE");
 
+            Preference buttonPref = findPreference("sendNotificationButton");
             buttonPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
@@ -252,7 +256,21 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 }
             });
 
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
+            Preference dismissAllButton = findPreference("dismiss_all");
+            dismissAllButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    // Clear all notification
+                    NotificationManager nMgr = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                    nMgr.cancelAll();
+                return false;
+                }
+            });
+
+
+
+
+            // Bind th  e summaries of EditText/List/Dialog/Ringtone preferences
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
