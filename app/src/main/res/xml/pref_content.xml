@@ -2,6 +2,7 @@
 
     <Preference android:title="Send notification now"
         android:key="sendNotificationButton"
+        android:icon="@drawable/ic_send_big"
         />
 
     <EditTextPreference

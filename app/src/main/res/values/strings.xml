@@ -108,7 +108,7 @@
     <string-array name="pref_style_titles">
         <item>None</item>
         <item>Attach photo (BigPictureStyle)</item>
-        <item>Long text (BigTextStyle)</item>
+        <item>Long text as a message (BigTextStyle)</item>
         <item>Cover card (InboxStyle)</item>
         <item>Media card (MediaStyle)</item>
     </string-array>

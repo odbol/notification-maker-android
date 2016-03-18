@@ -5,14 +5,19 @@ package com.mortenjust.notificationmaker;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.RemoteInput;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Icon;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.v7.app.NotificationCompat;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.util.Log;
 import java.util.Random;
 import java.util.Set;
@@ -24,10 +29,10 @@ import java.util.Set;
 public class NotificationAssembler {
 
     SharedPreferences prefs;
-    NotificationCompat.Builder builder;
-    NotificationCompat.WearableExtender wearableExtender;
+    Notification.Builder builder;
+    Notification.WearableExtender wearableExtender;
 
-    NotificationCompat notification;
+    Notification notification;
     Context context;
 
     public NotificationAssembler(Context context){
@@ -57,7 +62,7 @@ public class NotificationAssembler {
 
         //noinspection ResourceType
 
-        builder  = new NotificationCompat.Builder(context)
+        builder  = new Notification.Builder(context)
                         .setContentTitle(getPrefString("content_title"))
                         .setContentText(getPrefString("content_text"))
                         .setContentInfo(getPrefString("content_info"))
@@ -74,13 +79,18 @@ public class NotificationAssembler {
                         .setAutoCancel(getPrefBool("auto_cancel"))
                 ;
 
-        addActionsFromPref();
+        Log.d("mj.", "use_style is " + getPrefString("use_style"));
+        if(getPrefString("use_style") != "use_media_style"){
+            Log.d("mj.", "Adding regular");
+            addActionsFromPref();
+            setRemoteInput();
+        }
         setVibrationFromPref();
         setLargeIconFromPref();
 
         // wearable extender
         if(getPrefBool("enable_wearable_extender")){
-            wearableExtender = new NotificationCompat.WearableExtender();
+            wearableExtender = new Notification.WearableExtender();
             addWearableActionsFromPref();
             setLongScreenTimeout();
             setScrolledToBottom();
@@ -89,7 +99,7 @@ public class NotificationAssembler {
             builder.extend(wearableExtender);
         }
 
-        setStyleFromPref(); // must be last because mediastyle wants to override stuff
+        setStyleFromPref(); // must be last because they want to override stuff to not look weird
         Integer notificationId = getNotificationId();
 
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -111,7 +121,7 @@ public class NotificationAssembler {
 
     private void setLongScreenTimeout(){
         if(getPrefBool("long_screen_timeout")){
-            wearableExtender.setHintScreenTimeout(NotificationCompat.WearableExtender.SCREEN_TIMEOUT_LONG);
+            wearableExtender.setHintScreenTimeout(Notification.WearableExtender.SCREEN_TIMEOUT_LONG);
         }
     }
 
@@ -122,22 +132,37 @@ public class NotificationAssembler {
     }
 
     private void setRemoteInput(){
-        CharSequence[] options = {"Yes", "No", "Call me maybe"};
-
         if(getPrefBool("use_remote_input")){
-            RemoteInput remoteInput = new RemoteInput.Builder("key_text_reply")
-                    .setLabel("Reply now")
-                    .setChoices(options)
-                    .build();
+            CharSequence[] options = {"Yes", "No", "Call me maybe"};
 
-            NotificationCompat.Action action =
-                    new NotificationCompat.Action.Builder(R.drawable.ic_reply_white_36dp,
-                            "Reply", null)
-                            .addRemoteInput(remoteInput)
-                            .build();
+            if(getPrefBool("use_remote_input")){
+                RemoteInput remoteInput = new RemoteInput.Builder("key_text_reply")
+                        .setLabel("Reply now")
+                        .setChoices(options)
+                        .build();
 
-            builder.addAction(action);
+                Icon icon = Icon.createWithResource(context, R.drawable.ic_reply_white_36dp);
+
+                Notification.Action a =
+                        new Notification.Action.Builder(icon,
+                                "Reply here", getPendingIntent())
+                                .addRemoteInput(remoteInput)
+                                .build();
+                builder.addAction(a);
+            }
         }
+    }
+
+    PendingIntent getPendingIntent(){
+        Intent resultIntent = new Intent(context, SettingsActivity.class);
+        PendingIntent p =
+                PendingIntent.getActivity(
+                        context,
+                        0,
+                        resultIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+        return p;
     }
 
     private void setWearableBackground(){
@@ -149,12 +174,12 @@ public class NotificationAssembler {
     private void addWearablePages(){
         if(getPrefBool("add_wearable_pages")){
 
-            NotificationCompat.BigTextStyle textStyle = new NotificationCompat.BigTextStyle();
+            Notification.BigTextStyle textStyle = new Notification.BigTextStyle();
             textStyle.bigText("\"It was the BigTextStyle on Page 1 of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief, it was the epoch of incredulity, it was the season of Light, it was the season of Darkness, it was the spring of hope, it was the winter of despair, we had everything before us, we had nothing before us, we were all going direct to Heaven, we were all going direct the other way – in short, the period was so far like the present period, that some of its noisiest authorities insisted on its being received, for good or for evil, in the superlative degree of comparison only.");
 
 
             Notification page1;
-            page1 = new NotificationCompat.Builder(context)
+            page1 = new Notification.Builder(context)
                     .setStyle(textStyle)
                     .build();
 
@@ -168,37 +193,45 @@ public class NotificationAssembler {
     }
 
 
-
-
-
     private void setStyleFromPref() {
         switch(getPrefString("use_style")){
             case "use_big_picture_style":
                 Bitmap bigPicture = getBitmapFromResource(R.drawable.big_picture_dog);
-                builder.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bigPicture));
+                builder.setStyle(new Notification.BigPictureStyle().bigPicture(bigPicture));
                 break;
             case "use_big_text_style":
-                String bigText = "It was the BigTextStyle of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief, it was the epoch of incredulity, it was the season of Light, it was the season of Darkness, it was the spring of hope, it was the winter of despair, we had everything before us, we had nothing before us, we were all going direct to Heaven, we were all going direct the other way – in short, the period was so far like the present period, that some of its noisiest authorities insisted on its being received, for good or for evil, in the superlative degree of comparison only.";
-                builder.setStyle(new NotificationCompat.BigTextStyle().bigText(bigText));
+                String bigTextSubject = "About the times";
+                String bigTextBody = "It was the BigTextStyle of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief, it was the epoch of incredulity, it was the season of Light, it was the season of Darkness, it was the spring of hope, it was the winter of despair, we had everything before us, we had nothing before us, we were all going direct to Heaven, we were all going direct the other way – in short, the period was so far like the present period, that some of its noisiest authorities insisted on its being received, for good or for evil, in the superlative degree of comparison only.";
+                Spanned bigText = Html.fromHtml(bigTextSubject+"<br>"+bigTextBody);
+                builder.setStyle(new Notification.BigTextStyle().bigText(bigText));
+//                builder.setContentTitle(Html.fromHtml("About the times"));
+                builder.setContentText(Html.fromHtml("About the times"));
                 break;
             case "use_inbox_style":
-                NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle()
-                        .addLine("Line one is here")
-                        .addLine("This is line two")
-                        .addLine("And three")
-                        .addLine("And Four")
-                        .setBigContentTitle("Content title here")
-                        .setSummaryText("Wait, there's 35 more");
+
+                Notification.InboxStyle inboxStyle = new Notification.InboxStyle()
+                        .addLine(Html.fromHtml("<b>Luke</b> No! No! No!"))
+                        .addLine(Html.fromHtml("<b>DV</b> Search your feelings. You know it to be true."))
+                        .addLine(Html.fromHtml("<b>Luke</b> No. No. That's not true! That's impossible!"))
+                        .addLine(Html.fromHtml("<b>DV</b> No. I am your father."))
+                        .addLine(Html.fromHtml("<b>Luke</b>  He told me enough! He told me you killed him."))
+                        .addLine(Html.fromHtml("<b>DV</b> If you only knew the power of the dark side. Obi-Wan never told\n" +
+                                "you what happened to your father."))
+                        .setBigContentTitle("41 new messages in Parenthood")
+                        .setSummaryText("+35 more");
                 builder.setStyle(inboxStyle);
                 break;
             case "use_media_style":
-//                Notification.MediaStyle mediaStyle = new Notification.MediaStyle();
-//
-//                /// http://developer.android.com/reference/android/app/Notification.MediaStyle.html
-//                // should set smallicon to play, largeicon to album art, contenttitle as track title, contentt text as album/artist
-//                builder.setLargeIcon(getBitmapFromResource(R.drawable.album_cover));
-//                builder.setStyle(a.);
+                Notification.MediaStyle mediaStyle = new Notification.MediaStyle();
 
+                /// http://developer.android.com/reference/android/app/Notification.MediaStyle.html
+                // should set smallicon to play, largeicon to album art, contenttitle as track title, content text as album/artist
+
+                builder.addAction(createAction(R.drawable.ic_play_arrow_white_36dp, "Play"));
+                builder.addAction(createAction(R.drawable.ic_fast_forward_white_36dp, "Fast Forward"));
+                builder.addAction(createAction(R.drawable.ic_record_voice_over_white_36dp, "Sing!"));
+                builder.setLargeIcon(getBitmapFromResource(R.drawable.album_cover));
+                builder.setStyle(mediaStyle);
                 break;
         }
     }
@@ -304,9 +337,10 @@ public class NotificationAssembler {
         }
     }
 
-    NotificationCompat.Action createAction(int iconId, String label){
-        NotificationCompat.Action action;
-        action = new NotificationCompat.Action.Builder(iconId, label, null).build();
+    Notification.Action createAction(int iconId, String label){
+        Notification.Action action;
+        Icon i = Icon.createWithResource(context, iconId);
+        action = new Notification.Action.Builder(i, label, null).build();
         return action;
     }
 
