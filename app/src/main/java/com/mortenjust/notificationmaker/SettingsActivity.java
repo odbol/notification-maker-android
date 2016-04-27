@@ -241,6 +241,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             bindPreferenceSummaryToValue(findPreference("priority"));
 //            bindHashSetPreferenceSummaryToValue(findPreference("actions")); // meh, crashes
             bindPreferenceSummaryToValue(findPreference("visibility"));
+            bindPreferenceSummaryToValue(findPreference("notification_id_name"));
             bindPreferenceSummaryToValue(findPreference("person"));
 
 

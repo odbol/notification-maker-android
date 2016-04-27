@@ -51,14 +51,23 @@
 
     <ListPreference
         android:defaultValue="none"
+        android:entries="@array/pref_notification_icon"
+        android:entryValues="@array/pref_notification_icon_value"
+        android:icon="@drawable/ic_gesture_black_24dp"
+        android:key="notification_id_name"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="Set notification icon" />
+
+    <ListPreference
+        android:defaultValue="none"
         android:entries="@array/pref_large_icon_content_titles"
         android:entryValues="@array/pref_large_icon_content_values"
         android:key="large_icon"
         android:icon="@drawable/ic_account_circle_black_24dp"
         android:negativeButtonText="@null"
         android:positiveButtonText="@null"
-        android:title="Set large icon (avatar)" />
-
+        android:title="Set photo/large icon/avatar" />
 
     <ListPreference
         android:defaultValue="none"
@@ -69,6 +78,7 @@
         android:negativeButtonText="@null"
         android:positiveButtonText="@null"
         android:title="Style: Photo, text, cover or media" />
+
 
 
     <EditTextPreference

@@ -8,6 +8,6 @@ import android.support.v7.app.NotificationCompat;
  */
 public class PreferenceStore {
     // store all preferences and their defaults here
-    // maybe in some kind of loopable thing
+    // maybe in some kind of loopable thingssss
 
 }

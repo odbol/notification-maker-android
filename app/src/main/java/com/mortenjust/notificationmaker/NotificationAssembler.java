@@ -12,6 +12,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -55,13 +57,7 @@ public class NotificationAssembler {
     }
 
     void postNotification(){
-        // indirect values
-
-        Log.d("mj.", "ready to send notification");
-
-
         //noinspection ResourceType
-
         builder  = new Notification.Builder(context)
                         .setContentTitle(getPrefString("content_title"))
                         .setContentText(getPrefString("content_text"))
@@ -74,7 +70,6 @@ public class NotificationAssembler {
                         .setOnlyAlertOnce(getPrefBool("only_alert_once"))
                         .setOngoing(getPrefBool("ongoing"))
                         .setUsesChronometer(getPrefBool("uses_chronometer"))
-                        .setSmallIcon(R.drawable.ic_small_icon)
                         .addPerson(getPrefString("person"))
                         .setAutoCancel(getPrefBool("auto_cancel"))
                 ;
@@ -87,6 +82,8 @@ public class NotificationAssembler {
         }
         setVibrationFromPref();
         setLargeIconFromPref();
+        setSmallIconAndColorFromPref();
+
 
         // wearable extender
         if(getPrefBool("enable_wearable_extender")){
@@ -104,6 +101,61 @@ public class NotificationAssembler {
 
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         manager.notify(notificationId, builder.build());
+    }
+
+    void setSmallIconAndColorFromPref(){
+
+        Icon i;
+        String name = getPrefString("notification_id_name");
+
+
+        Integer r;
+        int c;
+        switch (name) {
+            case "default":
+                r = R.drawable.ic_small_icon;
+                c = context.getResources().getColor(R.color.colorPrimary, null);
+                break;
+            case "twitter":
+                r = R.drawable.ic_twitter;
+                c = Color.rgb(29, 161, 242);
+                break;
+            case "fit":
+                r = R.drawable.ic_fit;
+                c = Color.rgb(221, 77, 66);
+                break;
+            case "weather":
+                r = R.drawable.ic_weather;
+                c = Color.rgb(255, 203, 47);
+                break;
+            case "maps":
+                r = R.drawable.map_white_48dp;
+                c = Color.rgb(31, 163, 99);
+                break;
+            case "calendar":
+                r = R.drawable.event_available_white_48dp;
+                c = Color.rgb(70, 135, 244);
+                break;
+            case "email":
+                r = R.drawable.gmail_white_48dp;
+                c = Color.rgb(220, 74, 62);
+                break;
+            case "chat":
+                r = R.drawable.ic_chat;
+                c = Color.rgb(220, 74, 62);
+                break;
+            case "nytimes":
+                r = R.drawable.ic_nytimes;
+                c = Color.rgb(0, 0, 0);
+                break;
+            default:
+               r = R.drawable.ic_small_icon;
+               c = context.getResources().getColor(R.color.colorPrimary, null);
+        }
+
+        i = Icon.createWithResource(context, r);
+        builder.setSmallIcon(i);
+        builder.setColor(c);
     }
 
     @NonNull
@@ -289,6 +341,9 @@ public class NotificationAssembler {
                 case "archive":
                     builder.addAction(createAction(R.drawable.ic_archive_white_36dp, "Archive"));
                     break;
+                case "data":
+                    builder.addAction(createAction(R.drawable.ic_graph, "See stats"));
+                    break;
                 case "comment":
                     builder.addAction(createAction(R.drawable.ic_comment_white_36dp, "Comment"));
                     break;
@@ -299,7 +354,7 @@ public class NotificationAssembler {
                     builder.addAction(createAction(R.drawable.ic_album_white_36dp, "Open"));
                     break;
                 case "done":
-                    builder.addAction(createAction(R.drawable.ic_check_circle_black_24dp, "Done"));
+                    builder.addAction(createAction(R.drawable.ic_checkmark, "Done"));
                     break;
             }
         }
