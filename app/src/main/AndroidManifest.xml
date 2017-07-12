@@ -4,6 +4,9 @@
     package="com.mortenjust.notificationmaker">
 
     <uses-permission android:name="android.permission.VIBRATE"></uses-permission>
+    <uses-feature
+            android:name="android.hardware.type.watch"
+            android:required="true"/>
 
     <application
         android:allowBackup="true"

@@ -187,6 +187,12 @@
         android:key="uses_chronometer"
         />
 
+    <SwitchPreference
+        android:defaultValue="false"
+        android:title="Messaging"
+        android:key="messaging"
+        />
+
 
 
 

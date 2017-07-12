@@ -1,6 +1,11 @@
 package com.mortenjust.notificationmaker;
 
+import android.app.NotificationChannel;
+import android.app.NotificationChannelGroup;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.support.annotation.LayoutRes;
@@ -25,6 +30,43 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
         getDelegate().installViewFactory();
         getDelegate().onCreate(savedInstanceState);
         super.onCreate(savedInstanceState);
+
+        NotificationManager mNotificationManager =
+            (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        // The id of the channel.
+        String id = "test";
+        // The user-visible name of the channel.
+        CharSequence name = "Test channel";
+        // The user-visible description of the channel.
+        String description = "Test channel description";
+        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+        NotificationChannel mChannel = new NotificationChannel(id, name, importance);
+        // Configure the notification channel.
+        mChannel.setDescription(description);
+        mChannel.enableLights(true);
+        // Sets the notification light color for notifications posted to this
+        // channel, if the device supports this feature.
+        mChannel.setLightColor(Color.RED);
+        mChannel.enableVibration(true);
+        mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+        mNotificationManager.createNotificationChannel(mChannel);
+
+        mNotificationManager.createNotificationChannelGroup(new NotificationChannelGroup("group1", "Group 1"));
+
+        id = "test2";
+        name = "Test channel 2";
+        mChannel = new NotificationChannel(id, name, importance);
+        // Configure the notification channel.
+        mChannel.setDescription(description);
+        mChannel.enableLights(true);
+        // Sets the notification light color for notifications posted to this
+        // channel, if the device supports this feature.
+        mChannel.setLightColor(Color.RED);
+        mChannel.enableVibration(true);
+        mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+        mChannel.setGroup("group1");
+        mNotificationManager.createNotificationChannel(mChannel);
+
     }
 
     @Override
