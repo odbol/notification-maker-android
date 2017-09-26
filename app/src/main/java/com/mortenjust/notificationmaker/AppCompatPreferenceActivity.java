@@ -33,6 +33,7 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
 
         NotificationManager mNotificationManager =
             (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.deleteNotificationChannel("test");
         // The id of the channel.
         String id = "test";
         // The user-visible name of the channel.
@@ -47,8 +48,7 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
         // Sets the notification light color for notifications posted to this
         // channel, if the device supports this feature.
         mChannel.setLightColor(Color.RED);
-        mChannel.enableVibration(true);
-        mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+        mChannel.enableVibration(false);
         mNotificationManager.createNotificationChannel(mChannel);
 
         mNotificationManager.createNotificationChannelGroup(new NotificationChannelGroup("group1", "Group 1"));

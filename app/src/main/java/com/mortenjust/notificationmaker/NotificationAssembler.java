@@ -85,6 +85,10 @@ public class NotificationAssembler {
                   System.currentTimeMillis(), "DV"));
     }
 
+    if (getPrefBool("progress_determinate") || getPrefBool("progress_indeterminate")) {
+      builder.setProgress(100, 60, getPrefBool("progress_indeterminate"));
+    }
+
     Log.d("mj.", "use_style is " + getPrefString("use_style"));
     if (getPrefString("use_style") != "use_media_style") {
       Log.d("mj.", "Adding regular");
