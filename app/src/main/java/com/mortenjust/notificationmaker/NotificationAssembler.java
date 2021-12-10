@@ -16,7 +16,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Icon;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
