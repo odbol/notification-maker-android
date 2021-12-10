@@ -17,6 +17,7 @@
 
         <activity
             android:name=".SettingsActivity"
+            android:exported="true"
             android:label="Maker">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
