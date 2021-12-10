@@ -4,8 +4,11 @@ package com.mortenjust.notificationmaker;
 //import android.app.NotificationManager;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationChannelGroup;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.Person;
 import android.app.RemoteInput;
 import android.content.Context;
 import android.content.Intent;
@@ -14,8 +17,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Icon;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import android.text.Html;
 import android.text.Spanned;
@@ -58,31 +61,47 @@ public class NotificationAssembler {
   }
 
   void postNotification() {
+    String channelId = createChannel();
+
+    Person person = null;
+
+    String personName = getPrefString("person");
+    if (!TextUtils.isEmpty(personName)) {
+      person = new Person.Builder()
+          .setName(personName)
+          .setKey(personName)
+          .build();
+    }
+
     //noinspection ResourceType
-    builder = new Notification.Builder(context)
+    builder = new Notification.Builder(context, channelId)
         .setContentTitle(getPrefString("content_title"))
         .setContentText(getPrefString("content_text"))
         .setContentInfo(getPrefString("content_info"))
         .setCategory(getPrefString("category"))
         .setGroup(getPrefString("group"))
         .setGroupSummary(getPrefBool("group_summary"))
-        .setPriority(getPrefInt("priority"))
+        //.setPriority(getPrefInt("priority"))
         .setVisibility(getPrefInt("visibility"))
         .setOnlyAlertOnce(getPrefBool("only_alert_once"))
         .setOngoing(getPrefBool("ongoing"))
         .setUsesChronometer(getPrefBool("uses_chronometer"))
-        .addPerson(getPrefString("person"))
+        .addPerson(person)
         .setAutoCancel(getPrefBool("auto_cancel"))
-        .setChannelId("test")
+        .setChannelId(channelId)
     ;
 
-    if (getPrefBool("messaging")) {
+    if (getPrefBool("messaging") && person != null) {
+      Person sender = new Person.Builder()
+          .setName("Darth")
+          .setKey("Darth")
+          .build();
       builder
-          .setStyle(new Notification.MessagingStyle("me")
+          .setStyle(new Notification.MessagingStyle(person)
               .addMessage("No! No! No!",
-                  System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(30), "Luke")
+                  System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(30), person)
               .addMessage("Search your feelings. You know it to be true.",
-                  System.currentTimeMillis(), "DV"));
+                  System.currentTimeMillis(), sender));
     }
 
     if (getPrefBool("progress_determinate") || getPrefBool("progress_indeterminate")) {
@@ -116,6 +135,42 @@ public class NotificationAssembler {
     NotificationManager manager = (NotificationManager) context
         .getSystemService(Context.NOTIFICATION_SERVICE);
     manager.notify(notificationId, builder.build());
+  }
+
+  private String createChannel() {
+    NotificationManager manager = (NotificationManager) context
+        .getSystemService(Context.NOTIFICATION_SERVICE);
+
+    int importance = getPrefInt("priority");
+    String group = getPrefString("group");
+    boolean groupSummary = getPrefBool("group_summary");
+    boolean vibrate = getPrefBool("vibrate");
+
+    String id = "test_" + importance + "_" + group + "_" + vibrate;
+    // The user-visible name of the channel.
+    CharSequence name = "Test channel";
+    // The user-visible description of the channel.
+    String description = "Test channel description";
+    NotificationChannel mChannel = new NotificationChannel(id, name, importance);
+    // Configure the notification channel.
+    mChannel.setDescription(description);
+    mChannel.enableLights(true);
+    // Sets the notification light color for notifications posted to this
+    // channel, if the device supports this feature.
+    mChannel.setLightColor(Color.RED);
+
+    mChannel.enableVibration(vibrate);
+    if (vibrate) {
+      mChannel.setVibrationPattern(new long[]{100, 500});
+    }
+    manager.createNotificationChannel(mChannel);
+
+    if (!TextUtils.isEmpty(group)) {
+      mChannel.setGroup(group);
+      manager.createNotificationChannelGroup(new NotificationChannelGroup(group, group));
+    }
+
+    return id;
   }
 
   void setSmallIconAndColorFromPref() {
