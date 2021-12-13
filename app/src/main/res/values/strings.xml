@@ -210,8 +210,11 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
+  <string name="save">Save</string>
+  <string name="create_new_notification">Create new notification</string>
+  <string name="saved">"Saved notification "</string>
 
-    <string-array name="reply_choices">
+  <string-array name="reply_choices">
         <item>Yes</item>
         <item>No</item>
         <item>Definitely Maybe</item>
