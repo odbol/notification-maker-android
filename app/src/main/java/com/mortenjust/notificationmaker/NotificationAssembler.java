@@ -23,6 +23,7 @@ import androidx.annotation.NonNull;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
+import com.mortenjust.notificationmaker.models.NotificationData;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -33,31 +34,33 @@ import java.util.concurrent.TimeUnit;
  */
 public class NotificationAssembler {
 
-  SharedPreferences prefs;
+  private final NotificationData model;
   Notification.Builder builder;
   Notification.WearableExtender wearableExtender;
 
   Notification notification;
   Context context;
 
-  public NotificationAssembler(Context context) {
+  public NotificationAssembler(Context context, NotificationData model) {
     this.context = context;
-    prefs = PreferenceManager.getDefaultSharedPreferences(context);
+    this.model = model;
   }
 
   // Ints are saved as Strings
   Integer getPrefInt(String key) {
-    String s = prefs.getString(key, "0");
-    Integer i = Integer.parseInt(s);
-    return i;
+    return model.getPrefInt(key);
   }
 
   String getPrefString(String key) {
-    return prefs.getString(key, "");
+    return model.getPrefString(key);
   }
 
   Boolean getPrefBool(String key) {
-    return prefs.getBoolean(key, false);
+    return model.getPrefBool(key);
+  }
+
+  private Set<String> getPrefStringSet(String actions) {
+    return model.getPrefStringSet(actions);
   }
 
   void postNotification() {
@@ -396,7 +399,7 @@ public class NotificationAssembler {
 
   private void addActionsFromPref() {
     Log.d("mj.actions", "ready to run through");
-    Set<String> selectedActions = prefs.getStringSet("actions", null);
+    Set<String> selectedActions = getPrefStringSet("actions");
 
     if (selectedActions == null) {
       return;
@@ -431,7 +434,7 @@ public class NotificationAssembler {
   }
 
   private void addWearableActionsFromPref() {
-    Set<String> selectedActions = prefs.getStringSet("wearable_actions", null);
+    Set<String> selectedActions = getPrefStringSet("wearable_actions");
 
     if (selectedActions == null) {
       return;

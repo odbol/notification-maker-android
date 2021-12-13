@@ -21,6 +21,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import androidx.appcompat.app.ActionBar;
+import com.mortenjust.notificationmaker.models.NotificationDataPreferences;
 import java.util.List;
 
 /**
@@ -247,7 +248,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 public boolean onPreferenceClick(Preference preference) {
                     Log.d("mj.", "we just got the click!");
 
-                    NotificationAssembler assembler = new NotificationAssembler(getContext());
+                    NotificationAssembler assembler = new NotificationAssembler(getContext(), new NotificationDataPreferences(getContext()));
                     assembler.postNotification();
                     return false;
                 }
