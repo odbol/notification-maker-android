@@ -5,6 +5,7 @@ import android.annotation.TargetApi;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Configuration;
 import android.media.Ringtone;
@@ -25,6 +26,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 import androidx.appcompat.app.ActionBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.mortenjust.notificationmaker.models.NotificationDataPreferences;
 import com.mortenjust.notificationmaker.models.NotificationRepo;
 import java.util.List;
@@ -41,6 +43,7 @@ import java.util.List;
  * API Guide</a> for more information on developing a Settings UI.
  */
 public class SettingsActivity extends AppCompatPreferenceActivity {
+
     private static final String FRAGMENT_ARGUMENT_LOAD_NOTIFICATION = "FRAGMENT_ARGUMENT_LOAD_NOTIFICATION";
 
     /**
@@ -48,6 +51,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      * to reflect its new value.
      */
     private static final String TAG = "mj.SettingsActivity";
+    public static final String PREFS_HINT_SEEN = "PREFS_HINT_SEEN";
 
     private NotificationRepo repo;
 
@@ -153,6 +157,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
         getFragmentManager().addOnBackStackChangedListener(this::invalidateHeaders);
         repo.addNotificationSavedListener(onNotificationSavedListener);
+
+        showHint();
     }
 
     @Override
@@ -165,6 +171,25 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     protected void onResume() {
         super.onResume();
         invalidateHeaders();
+    }
+
+    private void showHint() {
+        SharedPreferences prefs = getSharedPreferences(PREFS_HINT_SEEN, MODE_PRIVATE);
+        if (!prefs.getBoolean(PREFS_HINT_SEEN, false)) {
+            getListView().postDelayed(() -> {
+                Snackbar snackbar = Snackbar
+                    .make(getListView(), R.string.wearos_warning_intro_snackbar,
+                        Snackbar.LENGTH_INDEFINITE);
+                snackbar.setAction(
+                    R.string.show_me,
+                    v -> {
+                        prefs.edit().putBoolean(PREFS_HINT_SEEN, true).apply();
+                        startActivity(new Intent(this, HelpActivity.class));
+                    });
+
+                snackbar.show();
+            }, 1000);
+        }
     }
 
     /**
