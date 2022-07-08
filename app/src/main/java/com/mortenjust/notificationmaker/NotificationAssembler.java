@@ -1,8 +1,5 @@
 package com.mortenjust.notificationmaker;
 
-//import android.app.Notification;
-//import android.app.NotificationManager;
-
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationChannelGroup;
@@ -12,12 +9,10 @@ import android.app.Person;
 import android.app.RemoteInput;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Icon;
-import android.preference.PreferenceManager;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.text.TextUtils;
@@ -40,7 +35,6 @@ public class NotificationAssembler {
   Notification.Builder builder;
   Notification.WearableExtender wearableExtender;
 
-  Notification notification;
   Context context;
 
   public NotificationAssembler(Context context, NotificationData model) {
