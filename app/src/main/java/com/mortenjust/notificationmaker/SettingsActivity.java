@@ -1,6 +1,5 @@
 package com.mortenjust.notificationmaker;
 
-
 import android.annotation.TargetApi;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -55,15 +54,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
     private NotificationRepo repo;
 
-//    @Override
-//    public void onHeaderClick(Header header, int position) {
-//        Log.d(TAG, "on the headerz clickz");
-//        super.onHeaderClick(header, position);
-//
-//        if (header.id == R.id.send_notification) {
-//            sendNotification();
-//        }
-//    }
     private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object value) {
@@ -115,7 +105,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     };
 
     private final OnSharedPreferenceChangeListener
-        onNotificationSavedListener = (a, b) -> invalidateHeaders();;
+        onNotificationSavedListener = (a, b) -> invalidateHeaders();
 
     /**
      * Helper method to determine if the device has an extra-large screen. For
@@ -146,8 +136,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                         .getDefaultSharedPreferences(preference.getContext())
                         .getString(preference.getKey(), ""));
     }
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

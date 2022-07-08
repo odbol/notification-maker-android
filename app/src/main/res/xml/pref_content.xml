@@ -142,6 +142,11 @@
         android:key="use_remote_input"
         />
 
+    <SwitchPreference
+        android:defaultValue="false"
+        android:title="Use random request codes"
+        android:key="use_random_request_codes"
+        />
 
     <ListPreference
         android:defaultValue="0"
