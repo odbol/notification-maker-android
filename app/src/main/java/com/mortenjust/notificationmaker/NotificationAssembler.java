@@ -18,6 +18,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Icon;
 import android.preference.PreferenceManager;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import android.text.Html;
@@ -279,14 +281,11 @@ public class NotificationAssembler {
 
   PendingIntent getPendingIntent() {
     Intent resultIntent = new Intent(context, SettingsActivity.class);
-    PendingIntent p =
-        PendingIntent.getActivity(
-            context,
-            0,
-            resultIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT
-        );
-    return p;
+    int flags = PendingIntent.FLAG_UPDATE_CURRENT;
+    if (VERSION.SDK_INT >= VERSION_CODES.S) {
+      flags |= PendingIntent.FLAG_MUTABLE;
+    }
+    return PendingIntent.getActivity(context, /*requestCode =*/0, resultIntent, flags);
   }
 
   private void setWearableBackground() {
