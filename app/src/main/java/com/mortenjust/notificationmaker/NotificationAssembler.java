@@ -2,7 +2,6 @@ package com.mortenjust.notificationmaker;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
-import android.app.NotificationChannelGroup;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -35,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 public class NotificationAssembler {
 
   private final NotificationData model;
-  private Random rand = new Random();
+  private final Random random = new Random();
   NotificationCompat.Builder builder;
   NotificationCompat.WearableExtender wearableExtender;
 
@@ -281,14 +280,10 @@ public class NotificationAssembler {
     }
 
     if (getPrefBool("use_random_request_codes")) {
-      code = randomRequestCode();
+      code = random.nextInt();
     }
 
     return PendingIntent.getActivity(context, code, intent, flags);
-  }
-
-  int randomRequestCode() {
-    return rand.nextInt();
   }
 
   private void setWearableBackground() {
