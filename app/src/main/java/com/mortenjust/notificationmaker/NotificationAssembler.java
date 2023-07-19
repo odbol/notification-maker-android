@@ -1,29 +1,28 @@
 package com.mortenjust.notificationmaker;
 
-//import android.app.Notification;
-//import android.app.NotificationManager;
-
 import android.app.Notification;
 import android.app.NotificationChannel;
-import android.app.NotificationChannelGroup;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Person;
-import android.app.RemoteInput;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.Icon;
-import android.preference.PreferenceManager;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.Person;
+import androidx.core.app.RemoteInput;
+import androidx.core.graphics.drawable.IconCompat;
+import androidx.media.app.NotificationCompat.MediaStyle;
 import com.mortenjust.notificationmaker.models.NotificationData;
+import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -35,10 +34,10 @@ import java.util.concurrent.TimeUnit;
 public class NotificationAssembler {
 
   private final NotificationData model;
-  Notification.Builder builder;
-  Notification.WearableExtender wearableExtender;
+  private final Random random = new Random();
+  NotificationCompat.Builder builder;
+  NotificationCompat.WearableExtender wearableExtender;
 
-  Notification notification;
   Context context;
 
   public NotificationAssembler(Context context, NotificationData model) {
@@ -77,10 +76,10 @@ public class NotificationAssembler {
     }
 
     //noinspection ResourceType
-    builder = new Notification.Builder(context, channelId)
+    builder = new NotificationCompat.Builder(context, channelId)
         .setContentTitle(getPrefString("content_title"))
         .setContentText(getPrefString("content_text"))
-        .setContentInfo(getPrefString("content_info"))
+        .setSubText(getPrefString("content_info"))
         .setCategory(getPrefString("category"))
         .setGroup(getPrefString("group"))
         .setGroupSummary(getPrefBool("group_summary"))
@@ -99,12 +98,20 @@ public class NotificationAssembler {
           .setName("Darth")
           .setKey("Darth")
           .build();
-      builder
-          .setStyle(new Notification.MessagingStyle(person)
-              .addMessage("No! No! No!",
-                  System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(30), person)
-              .addMessage("Search your feelings. You know it to be true.",
-                  System.currentTimeMillis(), sender));
+      builder.setStyle(
+          new NotificationCompat.MessagingStyle(person)
+              .addMessage(
+                  /*text = */"No! No! No!",
+                  /*timestamp = */System.currentTimeMillis()
+                      - TimeUnit.MINUTES.toMillis(30),
+                  person
+              )
+              .addMessage(
+                  /*text = */"Search your feelings. You know it to be true.",
+                  /*timestamp = */System.currentTimeMillis(),
+                  sender
+              )
+      );
     }
 
     if (getPrefBool("progress_determinate") || getPrefBool("progress_indeterminate")) {
@@ -112,7 +119,7 @@ public class NotificationAssembler {
     }
 
     Log.d("mj.", "use_style is " + getPrefString("use_style"));
-    if (getPrefString("use_style") != "use_media_style") {
+    if (!Objects.equals(getPrefString("use_style"), "use_media_style")) {
       Log.d("mj.", "Adding regular");
       addActionsFromPref();
       setRemoteInput();
@@ -123,7 +130,7 @@ public class NotificationAssembler {
 
     // wearable extender
     if (getPrefBool("enable_wearable_extender")) {
-      wearableExtender = new Notification.WearableExtender();
+      wearableExtender = new NotificationCompat.WearableExtender();
       addWearableActionsFromPref();
       setLongScreenTimeout();
       setScrolledToBottom();
@@ -145,13 +152,11 @@ public class NotificationAssembler {
         .getSystemService(Context.NOTIFICATION_SERVICE);
 
     int importance = getPrefInt("priority");
-    String group = getPrefString("group");
-    boolean groupSummary = getPrefBool("group_summary");
     boolean vibrate = getPrefBool("vibrate");
 
-    String id = "test_" + importance + "_" + group + "_" + vibrate;
+    String id = "test_" + importance + "_" + "_" + vibrate;
     // The user-visible name of the channel.
-    CharSequence name = "Test channel";
+    CharSequence name = "Test channel " + id;
     // The user-visible description of the channel.
     String description = "Test channel description";
     NotificationChannel mChannel = new NotificationChannel(id, name, importance);
@@ -168,26 +173,15 @@ public class NotificationAssembler {
     }
     manager.createNotificationChannel(mChannel);
 
-    if (!TextUtils.isEmpty(group)) {
-      mChannel.setGroup(group);
-      manager.createNotificationChannelGroup(new NotificationChannelGroup(group, group));
-    }
-
     return id;
   }
 
   void setSmallIconAndColorFromPref() {
-
-    Icon i;
     String name = getPrefString("notification_id_name");
 
-    Integer r;
+    int r;
     int c;
     switch (name) {
-      case "default":
-        r = R.drawable.ic_small_icon;
-        c = context.getResources().getColor(R.color.colorPrimary, null);
-        break;
       case "twitter":
         r = R.drawable.ic_twitter;
         c = Color.rgb(29, 161, 242);
@@ -225,14 +219,13 @@ public class NotificationAssembler {
         c = context.getResources().getColor(R.color.colorPrimary, null);
     }
 
-    i = Icon.createWithResource(context, r);
-    builder.setSmallIcon(i);
+    builder.setSmallIcon(IconCompat.createWithResource(context, r));
     builder.setColor(c);
   }
 
   @NonNull
   private Integer getNotificationId() {
-    Integer notificationId;
+    int notificationId;
     Boolean updateNotification = getPrefBool("update_notification");
     if (updateNotification) {
       notificationId = 1337;
@@ -265,11 +258,11 @@ public class NotificationAssembler {
             .setChoices(options)
             .build();
 
-        Icon icon = Icon.createWithResource(context, R.drawable.ic_reply_white_36dp);
+        IconCompat icon = IconCompat.createWithResource(context, R.drawable.ic_reply_white_36dp);
 
-        Notification.Action a =
-            new Notification.Action.Builder(icon,
-                "Reply here", getPendingIntent())
+        NotificationCompat.Action a =
+            new NotificationCompat.Action.Builder(icon,
+                "Reply here", getPendingIntent(0))
                 .addRemoteInput(remoteInput)
                 .build();
         builder.addAction(a);
@@ -277,16 +270,20 @@ public class NotificationAssembler {
     }
   }
 
-  PendingIntent getPendingIntent() {
-    Intent resultIntent = new Intent(context, SettingsActivity.class);
-    PendingIntent p =
-        PendingIntent.getActivity(
-            context,
-            0,
-            resultIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT
-        );
-    return p;
+  PendingIntent getPendingIntent(int requestCode) {
+    Intent intent = new Intent(context, SettingsActivity.class);
+    int code = requestCode;
+    int flags = PendingIntent.FLAG_UPDATE_CURRENT;
+
+    if (VERSION.SDK_INT >= VERSION_CODES.S) {
+      flags |= PendingIntent.FLAG_MUTABLE;
+    }
+
+    if (getPrefBool("use_random_request_codes")) {
+      code = random.nextInt();
+    }
+
+    return PendingIntent.getActivity(context, code, intent, flags);
   }
 
   private void setWearableBackground() {
@@ -297,19 +294,37 @@ public class NotificationAssembler {
 
   private void addWearablePages() {
     if (getPrefBool("add_wearable_pages")) {
+      String channel = createChannel();
 
-      Notification.BigTextStyle textStyle = new Notification.BigTextStyle();
+      NotificationCompat.BigTextStyle textStyle = new NotificationCompat.BigTextStyle();
       textStyle.bigText(
-          "\"It was the BigTextStyle on Page 1 of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief, it was the epoch of incredulity, it was the season of Light, it was the season of Darkness, it was the spring of hope, it was the winter of despair, we had everything before us, we had nothing before us, we were all going direct to Heaven, we were all going direct the other way – in short, the period was so far like the present period, that some of its noisiest authorities insisted on its being received, for good or for evil, in the superlative degree of comparison only.");
+          "It was the BigTextStyle on Page 1 of times, it was the worst of times, it was the age "
+              + "of wisdom, it was the age of foolishness, it was the epoch of belief, it was the "
+              + "epoch of incredulity, it was the season of Light, it was the season of Darkness, "
+              + "it was the spring of hope, it was the winter of despair, we had everything before "
+              + "us, we had nothing before us, we were all going direct to Heaven, we were all "
+              + "going direct the other way – in short, the period was so far like the present "
+              + "period, that some of its noisiest authorities insisted on its being received, for "
+              + "good or for evil, in the superlative degree of comparison only."
+      );
 
       Notification page1;
-      page1 = new Notification.Builder(context)
+      page1 = new NotificationCompat.Builder(context, channel)
           .setStyle(textStyle)
           .build();
 
-      Notification page2 = new Notification.Builder(context)
-          .setStyle(new Notification.BigTextStyle().bigText(
-              "\"It was the BigTextStyle on Page 2 of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief, it was the epoch of incredulity, it was the season of Light, it was the season of Darkness, it was the spring of hope, it was the winter of despair, we had everything before us, we had nothing before us, we were all going direct to Heaven, we were all going direct the other way – in short, the period was so far like the present period, that some of its noisiest authorities insisted on its being received, for good or for evil, in the superlative degree of comparison only.\";"))
+      Notification page2 = new NotificationCompat.Builder(context, channel)
+          .setStyle(new NotificationCompat.BigTextStyle().bigText(
+              "It was the BigTextStyle on Page 2 of times, it was the worst of times, it was the "
+                  + "age of wisdom, it was the age of foolishness, it was the epoch of belief, it "
+                  + "was the epoch of incredulity, it was the season of Light, it was the season "
+                  + "of Darkness, it was the spring of hope, it was the winter of despair, we had "
+                  + "everything before us, we had nothing before us, we were all going direct to "
+                  + "Heaven, we were all going direct the other way – in short, the period was so "
+                  + "far like the present period, that some of its noisiest authorities insisted "
+                  + "on its being received, for good or for evil, in the superlative degree of "
+                  + "comparison only."
+          ))
           .build();
 
       wearableExtender.addPage(page1);
@@ -317,41 +332,67 @@ public class NotificationAssembler {
     }
   }
 
-
   private void setStyleFromPref() {
     switch (getPrefString("use_style")) {
       case "use_big_picture_style":
         Bitmap bigPicture = getBitmapFromResource(R.drawable.big_picture_dog);
-        builder.setStyle(new Notification.BigPictureStyle().bigPicture(bigPicture));
+        builder.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bigPicture));
         break;
       case "use_big_text_style":
         String bigTextSubject = "About the times";
-        String bigTextBody = "It was the BigTextStyle of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief, it was the epoch of incredulity, it was the season of Light, it was the season of Darkness, it was the spring of hope, it was the winter of despair, we had everything before us, we had nothing before us, we were all going direct to Heaven, we were all going direct the other way – in short, the period was so far like the present period, that some of its noisiest authorities insisted on its being received, for good or for evil, in the superlative degree of comparison only.";
-        Spanned bigText = Html.fromHtml(bigTextSubject + "<br>" + bigTextBody);
-        builder.setStyle(new Notification.BigTextStyle().bigText(bigText));
+        String bigTextBody = "It was the BigTextStyle of times, it was the worst of times, it was "
+            + "the age of wisdom, it was the age of foolishness, it was the epoch of belief, it "
+            + "was the epoch of incredulity, it was the season of Light, it was the season of "
+            + "Darkness, it was the spring of hope, it was the winter of despair, we had "
+            + "everything before us, we had nothing before us, we were all going direct to Heaven, "
+            + "we were all going direct the other way – in short, the period was so far like the "
+            + "present period, that some of its noisiest authorities insisted on its being "
+            + "received, for good or for evil, in the superlative degree of comparison only.";
+        Spanned bigText = Html.fromHtml(
+            /*source =*/bigTextSubject + "<br>" + bigTextBody,
+            Html.FROM_HTML_MODE_LEGACY
+        );
+        builder.setStyle(new NotificationCompat.BigTextStyle().bigText(bigText));
         //                builder.setContentTitle(Html.fromHtml("About the times"));
-        builder.setContentText(Html.fromHtml("About the times"));
+        builder.setContentText(Html.fromHtml(/*source =*/"About the times", Html.FROM_HTML_MODE_LEGACY));
         break;
       case "use_inbox_style":
 
-        Notification.InboxStyle inboxStyle = new Notification.InboxStyle()
-            .addLine(Html.fromHtml("<b>Luke</b> No! No! No!"))
-            .addLine(Html.fromHtml("<b>DV</b> Search your feelings. You know it to be true."))
-            .addLine(Html.fromHtml("<b>Luke</b> No. No. That's not true! That's impossible!"))
-            .addLine(Html.fromHtml("<b>DV</b> No. I am your father."))
-            .addLine(Html.fromHtml("<b>Luke</b>  He told me enough! He told me you killed him."))
+        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle()
             .addLine(Html.fromHtml(
-                "<b>DV</b> If you only knew the power of the dark side. Obi-Wan never told\n" +
-                    "you what happened to your father."))
+                /*source =*/"<b>Luke</b> No! No! No!", Html.FROM_HTML_MODE_LEGACY
+            ))
+            .addLine(Html.fromHtml(
+                /*source =*/"<b>DV</b> Search your feelings. You know it to be true.",
+                Html.FROM_HTML_MODE_LEGACY
+            ))
+            .addLine(Html.fromHtml(
+                /*source =*/"<b>Luke</b> No. No. That's not true! That's impossible!",
+                Html.FROM_HTML_MODE_LEGACY)
+            )
+            .addLine(Html.fromHtml(
+                /*source =*/"<b>DV</b> No. I am your father.",
+                Html.FROM_HTML_MODE_LEGACY
+            ))
+            .addLine(Html.fromHtml(
+                /*source =*/"<b>Luke</b>  He told me enough! He told me you killed him.",
+                Html.FROM_HTML_MODE_LEGACY
+            ))
+            .addLine(Html.fromHtml(
+                /*source =*/"<b>DV</b> If you only knew the power of the dark side. Obi-Wan never"
+                    + "told you what happened to your father.",
+                Html.FROM_HTML_MODE_LEGACY
+            ))
             .setBigContentTitle("41 new messages in Parenthood")
             .setSummaryText("+35 more");
         builder.setStyle(inboxStyle);
         break;
       case "use_media_style":
-        Notification.MediaStyle mediaStyle = new Notification.MediaStyle();
+        MediaStyle mediaStyle = new MediaStyle();
 
         /// http://developer.android.com/reference/android/app/Notification.MediaStyle.html
-        // should set smallicon to play, largeicon to album art, contenttitle as track title, content text as album/artist
+        // should set smallicon to play, largeicon to album art, contenttitle as track title,
+        // content text as album/artist
 
         builder.addAction(createAction(R.drawable.ic_play_arrow_white_36dp, "Play"));
         builder.addAction(createAction(R.drawable.ic_fast_forward_white_36dp, "Fast Forward"));
@@ -465,17 +506,13 @@ public class NotificationAssembler {
     }
   }
 
-  Notification.Action createAction(int iconId, String label) {
-    Notification.Action action;
-    Icon i = Icon.createWithResource(context, iconId);
-    action = new Notification.Action.Builder(i, label, null).build();
-    return action;
+  NotificationCompat.Action createAction(int iconId, String label) {
+    IconCompat i = IconCompat.createWithResource(context, iconId);
+    PendingIntent pendingIntent = getPendingIntent(label.hashCode());
+    return new NotificationCompat.Action.Builder(i, label, pendingIntent).build();
   }
 
   Bitmap getBitmapFromResource(int resourceId) {
-    Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), resourceId);
-    return bitmap;
+    return BitmapFactory.decodeResource(context.getResources(), resourceId);
   }
-
-
 }
